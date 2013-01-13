@@ -50,7 +50,7 @@ ${TEST_OBJS}:${OUT_PATH}/%.o: ${TEST_PATH}/%.cpp
 all: ${OUT_PATH}/${PROJECT}
 
 # Tool invocations
-${OUT_PATH}/${PROJECT}: $(OBJS) $(USER_OBJS) ${MAIN_OBJ}
+${OUT_PATH}/${PROJECT}: $(OBJS) $(USER_OBJS) ${MAIN_OBJ} init
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
 	g++  -o "${OUT_PATH}/${PROJECT}" $(OBJS) $(MAIN_OBJ) $(USER_OBJS) $(LIBS)
@@ -59,14 +59,17 @@ ${OUT_PATH}/${PROJECT}: $(OBJS) $(USER_OBJS) ${MAIN_OBJ}
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)${TEST_OBJS}${MAIN_OBJ}$(C_DEPS)$(CC_DEPS)$(CPP_DEPS) $(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ${PROJECT}
+	-$(RM) $(C++_DEPS)$(OBJS)${TEST_OBJS}${MAIN_OBJ}$(C_DEPS)$(CC_DEPS)$(CPP_DEPS) $(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ${PROJECT} ${OUT_PATH}
 	-@echo ' '
-test: ${TEST_OBJS} ${OBJS}
+test: ${TEST_OBJS} ${OBJS} init
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
 	g++  -o "${OUT_PATH}/${PROJECT}_test" $(OBJS) $(USER_OBJS) $(TEST_LIBS) ${TEST_OBJS}
 	@echo 'Finished building target: $@'
 	${OUT_PATH}/${PROJECT}_test
+init: 
+	@echo 'creating ${OUT_PATH} directory'
+	mkdir ${OUT_PATH}
 
-.PHONY: all clean dependents test
+.PHONY: all clean dependents test init
 .SECONDARY:
